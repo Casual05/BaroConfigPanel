@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>潜渊症配置面板</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚓</text></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- 顶部栏 -->
+    <header class="app-header">
+      <div class="logo">
+        <span class="logo-icon">⚓</span>
+        <h1>潜渊症配置面板</h1>
+      </div>
+      <div class="file-status-bar">
+        <div class="file-status" id="config-status">
+          <span class="status-dot offline"></span>
+          <span>config_player.xml</span>
+          <span class="file-path" id="config-path">未选择</span>
+          <button class="btn-sm" onclick="selectConfig()">选择文件</button>
+        </div>
+        <div class="file-status" id="server-status">
+          <span class="status-dot offline"></span>
+          <span>serversettings.xml</span>
+          <span class="file-path" id="server-path">未选择</span>
+          <button class="btn-sm" onclick="selectServer()">选择文件</button>
+        </div>
+        <button class="btn-sm btn-backup" onclick="openBackupManager()" title="备份管理">📂 备份</button>
+      </div>
+    </header>
+
+    <!-- 标签导航 -->
+    <nav class="tab-bar">
+      <button class="tab active" data-tab="mods" onclick="switchTab('mods')">
+        🧩 模组管理
+      </button>
+      <button class="tab" data-tab="server" onclick="switchTab('server')">
+        🖥️ 服务器设置
+      </button>
+    </nav>
+
+    <!-- ========= 模组面板 ========= -->
+    <section class="tab-content active" id="tab-mods">
+      <div class="toolbar">
+        <button class="btn btn-primary" onclick="importModlist()">
+          📥 导入模组清单
+        </button>
+        <button class="btn btn-secondary" onclick="loadCurrentMods()">
+          🔄 读取当前配置
+        </button>
+        <button class="btn btn-save" onclick="saveConfig()">
+          💾 保存到 config_player.xml
+        </button>
+      </div>
+
+      <div class="mod-list-container">
+        <div class="mod-list-header">
+          <span class="mod-drag"></span>
+          <span class="mod-enabled">启用</span>
+          <span class="mod-name">模组名称</span>
+          <span class="mod-id">Workshop ID</span>
+        </div>
+        <div class="mod-list" id="mod-list">
+          <div class="mod-list-empty">请导入模组清单或读取当前配置</div>
+        </div>
+      </div>
+      <div class="mod-count" id="mod-count">模组数量: 0</div>
+    </section>
+
+    <!-- ========= 服务器设置面板 ========= -->
+    <section class="tab-content" id="tab-server">
+      <div class="toolbar">
+        <button class="btn btn-secondary" onclick="loadServerSettings()">
+          🔄 读取当前配置
+        </button>
+        <button class="btn btn-save" onclick="saveServerSettings()">
+          💾 保存到 serversettings.xml
+        </button>
+      </div>
+
+      <div class="server-form" id="server-form">
+        <div class="server-loading">请先选择并加载 serversettings.xml</div>
+      </div>
+    </section>
+
+    <!-- ========= 备份管理弹窗 ========= -->
+    <div class="modal-overlay" id="backup-modal" onclick="closeBackupManager(event)">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>📂 备份管理</h2>
+          <span class="modal-close" onclick="closeBackupManager()">&times;</span>
+        </div>
+        <div class="modal-body">
+          <div class="backup-section">
+            <h3>📄 config_player.xml</h3>
+            <div class="backup-list" id="backup-list-config">
+              <div class="backup-empty">暂无备份</div>
+            </div>
+          </div>
+          <div class="backup-section">
+            <h3>⚙️ serversettings.xml</h3>
+            <div class="backup-list" id="backup-list-server">
+              <div class="backup-empty">暂无备份</div>
+            </div>
+          </div>
+          <p class="backup-hint">💡 每次保存时自动创建时间戳备份，恢复前会先备份当前文件</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 拖入浮层 -->
+    <div class="drag-overlay" id="drag-overlay">
+      <div class="drag-overlay-content">
+        <span class="drag-icon">📂</span>
+        <span class="drag-text">释放以识别文件</span>
+        <span class="drag-hint">config_player.xml / serversettings.xml / 模组清单.xml</span>
+      </div>
+    </div>
+
+    <!-- 通知 -->
+    <div class="toast-container" id="toast"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
