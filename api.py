@@ -16,10 +16,11 @@ class Api:
         self._server_path = ''
         self._detected_config = ''
         self._detected_server = ''
+        self._detected_modlist = ''
         self._auto_detect()
 
     def _auto_detect(self):
-        """自动检测当前目录下的 config_player.xml 和 serversettings.xml"""
+        """自动检测当前目录下的配置文件"""
         prog_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
         cfg = os.path.join(prog_dir, 'config_player.xml')
         sv  = os.path.join(prog_dir, 'serversettings.xml')
@@ -29,14 +30,53 @@ class Api:
         if os.path.isfile(sv):
             self._server_path = sv
             self._detected_server = sv
+        # 检测 ModList 目录下的 xml
+        modlist = self._auto_detect_modlist(prog_dir)
+        if modlist:
+            self._detected_modlist = modlist
+
+    def _is_modlist_xml(self, path: str) -> bool:
+        """检查 XML 文件是否为 Workshop 模组清单（根元素为 <mods>，含 <Workshop> 子节点）"""
+        try:
+            import xml.etree.ElementTree as ET
+            tree = ET.parse(path)
+            root = tree.getroot()
+            if root.tag != 'mods':
+                return False
+            for child in root:
+                if child.tag == 'Workshop':
+                    return True
+            return False
+        except Exception:
+            return False
+
+    def _auto_detect_modlist(self, base_dir: str) -> str:
+        """扫描目录及 ModList/ 子目录，找到第一个有效的模组清单 XML"""
+        import glob
+        # 先扫 ModList/ 子目录
+        for sub in ['ModList', 'modlist', 'Modlist', 'mods', 'Mods']:
+            d = os.path.join(base_dir, sub)
+            if os.path.isdir(d):
+                for f in sorted(glob.glob(os.path.join(d, '*.xml'))):
+                    if self._is_modlist_xml(f):
+                        return f
+        # 再扫当前目录（排除已知配置文件名）
+        exclude = {'config_player.xml', 'serversettings.xml'}
+        for f in sorted(glob.glob(os.path.join(base_dir, '*.xml'))):
+            if os.path.basename(f).lower() in exclude:
+                continue
+            if self._is_modlist_xml(f):
+                return f
+        return ''
 
     # ── 文件检测 ───────────────────────────────────────────
 
     def get_detected_files(self) -> dict:
-        """返回自动检测到的文件路径"""
+        """返回自动检测到的文件路径（含模组清单）"""
         return {
             'config': self._detected_config,
             'server': self._detected_server,
+            'modlist': self._detected_modlist,
         }
 
     def set_file_path(self, file_type: str, file_path: str) -> dict:

@@ -56,6 +56,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       updateFileStatus('server', detected.server);
       await loadServerSettings();
     }
+    if (detected.modlist) {
+      const imported = await pvApi('import_modlist', detected.modlist);
+      if (imported && imported.length > 0) {
+        mods = imported.filter(m => m.workshop_id !== null);
+        renderModList();
+      }
+    }
   }
 
   // 3. 全窗口拖入识别
