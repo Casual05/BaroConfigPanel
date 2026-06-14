@@ -62,7 +62,7 @@ pyinstaller --onefile --windowed --name "BaroConfigPanel" --add-data "frontend;f
 
 ## 技术栈
 - **后端**: Python 3.10+（xml.etree.ElementTree）
-- **前端**: HTML + CSS + JavaScript（暗色主题）
+- **前端**: HTML + CSS + JavaScript
 - **桌面窗口**: pywebview（Edge Chromium WebView2）
 - **打包**: PyInstaller（单文件 exe，~21MB）
 
@@ -74,7 +74,7 @@ baro-config-panel/
 ├── api.py               # pywebview JS Bridge API
 ├── frontend/
 │   ├── index.html       # 界面布局
-│   ├── style.css        # 暗色潜渊症主题
+│   ├── style.css         # 样式
 │   └── script.js        # 前端逻辑
 ├── requirements.txt     # 依赖
 ├── build.bat            # 打包脚本
