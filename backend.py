@@ -7,10 +7,10 @@ import glob
 from datetime import datetime
 from typing import Any
 
-# ── 模组导入（6.9.xml → 解析） ─────────────────────────────────
+# ── 模组导入（ModList xml → 解析） ──────────────────────────────
 
 def parse_workshop_modlist(xml_path: str) -> list[dict]:
-    """解析 Workshop 导出的 modlist XML（如 6.9.xml），返回有序列表"""
+    """解析 Workshop 导出的 ModList XML，返回有序列表"""
     tree = ET.parse(xml_path)
     root = tree.getroot()
     mods = []

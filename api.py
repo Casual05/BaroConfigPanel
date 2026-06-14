@@ -81,7 +81,7 @@ class Api:
         return path
 
     def select_import_file(self) -> str:
-        """选择要导入的 modlist XML（如 6.9.xml）"""
+        """选择要导入的 ModList 下的 XML 文件"""
         return self._pick_xml_file('选择模组清单 XML 文件')
 
     def get_current_dir(self) -> str:
