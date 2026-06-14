@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# PyInstaller
+build/
+dist/
+*.spec
+
+# 项目运行时产生的数据
+.baro_backups/
+.baro_dropped/
+
+# 测试临时文件
+*.bak
+*.test.xml
+_test_*
